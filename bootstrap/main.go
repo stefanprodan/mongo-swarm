@@ -13,6 +13,9 @@ import (
 var version = "undefined"
 
 func main() {
+	var config = &Config{}
+	flag.StringVar(&config.DataSet, "dataSet", "", "MongoDB data cluster")
+	flag.StringVar(&config.ConfigSet, "configSet", "", "MongoDB config cluster")
 	appVersion := flag.Bool("v", false, "prints version")
 	flag.Parse()
 
