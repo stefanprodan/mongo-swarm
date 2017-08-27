@@ -1,0 +1,54 @@
+version: "3.3"
+
+networks:
+  net:
+    driver: overlay
+    attachable: true
+
+volumes:
+    data: {}
+    cfg: {}
+
+services:
+
+  data1:
+    image: mongo:3.4
+    networks:
+      - net
+    volumes:
+      - data:/data/db
+    command: mongod --shardsvr --replSet datars --smallfiles
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.mongo.role == data1
+
+  data2:
+    image: mongo:3.4
+    networks:
+      - net
+    volumes:
+      - data:/data/db
+    command: mongod --shardsvr --replSet datars --smallfiles
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.mongo.role == data2
+
+  data3:
+    image: mongo:3.4
+    networks:
+      - net
+    volumes:
+      - data:/data/db
+    command: mongod --shardsvr --replSet datars --smallfiles
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.mongo.role == data3
