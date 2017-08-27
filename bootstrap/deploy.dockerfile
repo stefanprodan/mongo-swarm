@@ -1,9 +1,9 @@
-FROM golang:1.8.3-alpine
+FROM alpine:latest
 
-COPY /dist/boostrap /mongo-swarm/boostrap
+COPY /dist/bootstrap /mongo-swarm/bootstrap
 
-RUN chmod 777 /mongo-swarm/boostrap
+RUN chmod 777 /mongo-swarm/bootstrap
 
 
 WORKDIR /mongo-swarm
-ENTRYPOINT ["/mongo-swarm/boostrap"]
+ENTRYPOINT ["/mongo-swarm/bootstrap"]

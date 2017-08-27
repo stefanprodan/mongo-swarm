@@ -1,10 +1,10 @@
 FROM golang:1.8.3-alpine
 
 # copy code
-ADD . /go/src/github.com/stefanprodan/mongo-swarm/boostrap
+ADD . /go/src/github.com/stefanprodan/mongo-swarm/bootstrap
 
 # solution root
-WORKDIR /go/src/github.com/stefanprodan/mongo-swarm/boostrap
+WORKDIR /go/src/github.com/stefanprodan/mongo-swarm/bootstrap
 
 # pull deps
 RUN apk add --no-cache --virtual git
