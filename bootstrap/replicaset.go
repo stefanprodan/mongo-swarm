@@ -65,8 +65,6 @@ func (r *ReplicaSet) init() error {
 		memberList[i] = bson.M{"_id": i, "host": item}
 	}
 
-	logrus.Infof("Member list %v", memberList)
-
 	config := bson.M{
 		"_id":     r.Name,
 		"members": memberList,
@@ -86,7 +84,7 @@ func (r *ReplicaSet) InitWithRetry(retry int, wait int) error {
 		if err != nil {
 			return errors.Wrap(err, "ReplicaSet init failed")
 		} else {
-			logrus.Infof("Member %v is online", member)
+			logrus.Infof("%v member %v is online", r.Name, member)
 		}
 	}
 

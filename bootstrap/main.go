@@ -42,22 +42,22 @@ func main() {
 		logrus.Fatal(err)
 	}
 
-	//cfgReplSetName, cfgMembers, err := ParseReplicaSet(config.ConfigSet)
-	//if err != nil {
-	//	logrus.Fatal(err)
-	//}
-	//
-	//logrus.Infof("Bootstrap started for config cluster %v members %v", cfgReplSetName, cfgMembers)
-	//
-	//cfgReplSet := &ReplicaSet{
-	//	Name:    cfgReplSetName,
-	//	Members: cfgMembers,
-	//}
-	//
-	//err = cfgReplSet.InitWithRetry(config.Retry, 1)
-	//if err != nil {
-	//	logrus.Fatal(err)
-	//}
+	cfgReplSetName, cfgMembers, err := ParseReplicaSet(config.ConfigSet)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	logrus.Infof("Bootstrap started for config cluster %v members %v", cfgReplSetName, cfgMembers)
+
+	cfgReplSet := &ReplicaSet{
+		Name:    cfgReplSetName,
+		Members: cfgMembers,
+	}
+
+	err = cfgReplSet.InitWithRetry(config.Retry, 1)
+	if err != nil {
+		logrus.Fatal(err)
+	}
 
 	//wait for exit signal
 	sigChan := make(chan os.Signal)
