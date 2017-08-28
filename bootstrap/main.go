@@ -16,6 +16,7 @@ func main() {
 	var config = &Config{}
 	flag.StringVar(&config.DataSet, "dataSet", "", "MongoDB data cluster")
 	flag.StringVar(&config.ConfigSet, "configSet", "", "MongoDB config cluster")
+	flag.StringVar(&config.Mongos, "mongos", "", "Mongos list")
 	flag.IntVar(&config.Retry, "retry", 100, "retry count")
 	flag.IntVar(&config.Wait, "wait", 5, "wait time between retries in seconds")
 	appVersion := flag.Bool("v", false, "prints version")
@@ -78,6 +79,26 @@ func main() {
 	cfgReplSet.PrintStatus()
 	if !hasPrimary {
 		logrus.Fatalf("No primary node found for replica set %v", cfgReplSetName)
+	}
+
+	mongosList, err := ParseMongos(config.Mongos)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	logrus.Infof("Bootstrap started for mongos %v", mongosList)
+	for _, mongos := range mongosList {
+		m := &Mongos{
+			Address:       mongos,
+			ReplicaSetUrl: config.DataSet,
+		}
+
+		err := m.Init()
+		if err != nil {
+			logrus.Fatal(err)
+		}
+
+		logrus.Infof("%v shard added", mongos)
 	}
 
 	//wait for exit signal

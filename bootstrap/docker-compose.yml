@@ -60,11 +60,30 @@ services:
     networks:
       - net
 
+  mongos1:
+    image: mongo:3.4
+    container_name: mongos1
+    command: mongos --configdb cfgrs/cfg1:27017,cfg2:27017,cfg3:27017
+    expose:
+      - 27017
+    networks:
+      - net
+
+  mongos2:
+    image: mongo:3.4
+    container_name: mongos2
+    command: mongos --configdb cfgrs/cfg1:27017,cfg2:27017,cfg3:27017
+    expose:
+      - 27017
+    networks:
+      - net
+
   bootstrap:
     image: stefanprodan/mongo-bootstrap:latest
     container_name: mongo-bootstrap
     command:
       - '-dataSet=datars/data1:27017,data2:27017,data3:27017'
       - '-configSet=cfgrs/cfg1:27017,cfg2:27017,cfg3:27017'
+      - '-mongos=mongos1:27017,mongos2:27017'
     networks:
       - net

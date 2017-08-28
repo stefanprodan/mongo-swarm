@@ -9,6 +9,7 @@ import (
 type Config struct {
 	DataSet   string
 	ConfigSet string
+	Mongos    string
 	Retry     int
 	Wait      int
 }
@@ -30,4 +31,17 @@ func ParseReplicaSet(definition string) (string, []string, error) {
 	}
 
 	return replSetName, members, nil
+}
+
+func ParseMongos(definition string) ([]string, error) {
+	list := strings.Split(definition, ",")
+
+	for _, mongos := range list {
+		parts := strings.Split(mongos, ":")
+		if len(parts) != 2 {
+			return nil, errors.Errorf("%v invalid format, expected <HOST>:<PORT>", mongos)
+		}
+	}
+
+	return list, nil
 }
