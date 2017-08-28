@@ -127,11 +127,12 @@ func (r *ReplicaSet) WaitForPrimary(retry int, wait int) (bool, error) {
 		if err != nil {
 			return false, errors.Wrapf(err, "connection failed")
 		}
-		if !hasPrimary {
-			retry--
-		} else {
-			break
+		if hasPrimary {
+			return true, nil
 		}
+		retry--
+		logrus.Warnf("No primary node found retying after %v seconds", wait)
+		time.Sleep(time.Duration(wait) * time.Second)
 	}
 
 	return hasPrimary, nil
