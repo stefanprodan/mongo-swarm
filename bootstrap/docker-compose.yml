@@ -36,7 +36,7 @@ services:
   cfg1:
     image: mongo:3.4
     container_name: cfg1
-    command: mongod --configsvr --replSet datars --smallfiles --port 27017
+    command: mongod --configsvr --replSet cfgrs --smallfiles --port 27017
     expose:
       - 27017
     networks:
@@ -45,7 +45,7 @@ services:
   cfg2:
     image: mongo:3.4
     container_name: cfg2
-    command: mongod --configsvr --replSet datars --smallfiles --port 27017
+    command: mongod --configsvr --replSet cfgrs --smallfiles --port 27017
     expose:
       - 27017
     networks:
@@ -54,7 +54,7 @@ services:
   cfg3:
     image: mongo:3.4
     container_name: cfg3
-    command: mongod --configsvr --replSet datars --smallfiles --port 27017
+    command: mongod --configsvr --replSet cfgrs --smallfiles --port 27017
     expose:
       - 27017
     networks:
@@ -65,6 +65,6 @@ services:
     container_name: mongo-bootstrap
     command:
       - '-dataSet=datars/data1:27017,data2:27017,data3:27017'
-      - '-configSet=datars/cfg1:27017,cgf2:27017,cfg3:27017'
+      - '-configSet=cfgrs/cfg1:27017,cfg2:27017,cfg3:27017'
     networks:
       - net
