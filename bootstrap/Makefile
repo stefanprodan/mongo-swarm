@@ -26,8 +26,6 @@ pack:
 	@docker build -t mongo-bootstrap:$(APP_VERSION) \
 		-f deploy.dockerfile .
 
-	@rm -rf dist
-
 push:
 	@docker login -u "$(DOCKER_USER)" -p "$(DOCKER_PASS)"
 	@echo ">>> Pushing bootstrap to $(REGISTRY)/$(REPOSITORY)"
