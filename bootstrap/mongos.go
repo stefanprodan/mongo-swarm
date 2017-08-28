@@ -18,7 +18,7 @@ func (m *Mongos) Init() error {
 	session, err := mgo.DialWithTimeout(fmt.Sprintf(
 		"%v?connect=direct", m.Address), 5*time.Second)
 	if err != nil {
-		return errors.Wrapf(err, "%v connection failed", r.Members[0])
+		return errors.Wrapf(err, "%v connection failed", m.Address)
 	}
 
 	defer session.Close()

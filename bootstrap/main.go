@@ -88,12 +88,20 @@ func main() {
 
 	logrus.Infof("Bootstrap started for mongos %v", mongosList)
 	for _, mongos := range mongosList {
+
+		err := pingWithRetry(mongos, config.Retry, config.Wait)
+		if err != nil {
+			logrus.Fatalf("% mongos connection failed", mongos)
+		} else {
+			logrus.Infof("%v is online", mongos)
+		}
+
 		m := &Mongos{
 			Address:       mongos,
 			ReplicaSetUrl: config.DataSet,
 		}
 
-		err := m.Init()
+		err = m.Init()
 		if err != nil {
 			logrus.Fatal(err)
 		}
