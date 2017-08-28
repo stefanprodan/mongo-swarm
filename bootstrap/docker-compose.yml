@@ -1,21 +1,34 @@
 version: "3.3"
 
+networks:
+  net:
+    driver: bridge
+
 services:
 
   data1:
     image: mongo:3.4
+    container_name: data1
     command: mongod --shardsvr --replSet datars --smallfiles --port 27017
-    ports:
-      - 27027:27017
+    expose:
+      - 27017
+    networks:
+      - net
 
   data2:
     image: mongo:3.4
+    container_name: data2
     command: mongod --shardsvr --replSet datars --smallfiles --port 27017
-    ports:
-      - 27037:27017
+    expose:
+      - 27017
+    networks:
+      - net
 
   data3:
     image: mongo:3.4
+    container_name: data3
     command: mongod --shardsvr --replSet datars --smallfiles --port 27017
-    ports:
-      - 27047:27017
+    expose:
+      - 27017
+    networks:
+      - net
