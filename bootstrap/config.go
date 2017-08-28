@@ -14,7 +14,6 @@ type Config struct {
 }
 
 // ReplicaSet format <replicaSetName>/data1:27017,data2:27017,data3:27017
-// test ReplicaSet format datars/localhost:27027,localhost:27037,localhost:27047
 func ParseReplicaSet(definition string) (string, []string, error) {
 
 	parts := strings.Split(definition, "/")

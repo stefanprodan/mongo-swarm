@@ -7,8 +7,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	"time"
-
 	"github.com/sirupsen/logrus"
 )
 
@@ -44,9 +42,16 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
+	logrus.Infof("%v replica set initialized successfully", dataReplSetName)
 
-	time.Sleep(time.Duration(config.Wait) * time.Second)
+	hasPrimary, err := dataReplSet.WaitForPrimary(config.Retry, config.Wait)
+	if err != nil {
+		logrus.Fatal(err)
+	}
 	dataReplSet.PrintStatus()
+	if !hasPrimary {
+		logrus.Fatalf("No primary node found for replica set %v", dataReplSetName)
+	}
 
 	cfgReplSetName, cfgMembers, err := ParseReplicaSet(config.ConfigSet)
 	if err != nil {
@@ -64,9 +69,16 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
+	logrus.Infof("%v replica set initialized successfully", cfgReplSetName)
 
-	time.Sleep(time.Duration(config.Wait) * time.Second)
+	hasPrimary, err = cfgReplSet.WaitForPrimary(config.Retry, config.Wait)
+	if err != nil {
+		logrus.Fatal(err)
+	}
 	cfgReplSet.PrintStatus()
+	if !hasPrimary {
+		logrus.Fatalf("No primary node found for replica set %v", cfgReplSetName)
+	}
 
 	//wait for exit signal
 	sigChan := make(chan os.Signal)

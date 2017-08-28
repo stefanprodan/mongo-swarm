@@ -95,6 +95,48 @@ func (r *ReplicaSet) InitWithRetry(retry int, wait int) error {
 	return nil
 }
 
+func (r *ReplicaSet) hasPrimary() (bool, error) {
+	session, err := mgo.DialWithTimeout(fmt.Sprintf(
+		"%v?connect=direct", r.Members[0]), 5*time.Second)
+	if err != nil {
+		return false, errors.Wrapf(err, "%v connection failed", r.Members[0])
+	}
+
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+
+	status := &ReplicaSetStatus{}
+	if err := session.Run("replSetGetStatus", &status); err != nil {
+		return false, errors.Wrapf(err, "%v replSetGetStatus failed", r.Name)
+	} else {
+		for _, m := range status.Members {
+			if m.StateStr == "PRIMARY" {
+				return true, nil
+			}
+		}
+	}
+
+	return false, nil
+}
+
+func (r *ReplicaSet) WaitForPrimary(retry int, wait int) (bool, error) {
+	var hasPrimary bool
+	var err error
+	for retry > 0 {
+		hasPrimary, err = r.hasPrimary()
+		if err != nil {
+			return false, errors.Wrapf(err, "connection failed")
+		}
+		if !hasPrimary {
+			retry--
+		} else {
+			break
+		}
+	}
+
+	return hasPrimary, nil
+}
+
 func (r *ReplicaSet) PrintStatus() error {
 	session, err := mgo.DialWithTimeout(fmt.Sprintf(
 		"%v?connect=direct", r.Members[0]), 5*time.Second)
