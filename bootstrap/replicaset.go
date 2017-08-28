@@ -95,3 +95,25 @@ func (r *ReplicaSet) InitWithRetry(retry int, wait int) error {
 
 	return nil
 }
+
+func (r *ReplicaSet) PrintStatus() error {
+
+	session, err := mgo.DialWithTimeout(fmt.Sprintf(
+		"%v?connect=direct", r.Members[0]), 5*time.Second)
+
+	if err != nil {
+		return errors.Wrap(err, "Connection failed")
+	}
+
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+
+	result := bson.M{}
+	if err := session.Run("replSetGetStatus", &result); err != nil {
+		return errors.Wrap(err, "replSetInitiate failed")
+	} else {
+		fmt.Println(result)
+	}
+
+	return nil
+}

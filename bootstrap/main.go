@@ -42,6 +42,8 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	dataReplSet.PrintStatus()
+
 	cfgReplSetName, cfgMembers, err := ParseReplicaSet(config.ConfigSet)
 	if err != nil {
 		logrus.Fatal(err)
@@ -58,6 +60,8 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
+
+	cfgReplSet.PrintStatus()
 
 	//wait for exit signal
 	sigChan := make(chan os.Signal)
