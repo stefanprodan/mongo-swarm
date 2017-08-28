@@ -1,6 +1,8 @@
 # mongo-swarm
 
-Setup MongoDB shared clusters on Docker Swarm
+[![Build Status](https://travis-ci.org/stefanprodan/mongo-swarm.svg?branch=master)](https://travis-ci.org/stefanprodan/mongo-swarm)
+
+Setup MongoDB sharded clusters on Docker Swarm
 
 ### Swarm setup
 
