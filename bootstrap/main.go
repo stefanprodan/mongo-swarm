@@ -17,7 +17,7 @@ func main() {
 	flag.StringVar(&config.DataSet, "dataSet", "", "MongoDB data cluster")
 	flag.StringVar(&config.ConfigSet, "configSet", "", "MongoDB config cluster")
 	flag.IntVar(&config.Retry, "retry", 100, "retry count")
-	flag.IntVar(&config.Wait, "wait", 5, "wait time before checking the status in seconds")
+	flag.IntVar(&config.Wait, "wait", 5, "wait time between retries in seconds")
 	appVersion := flag.Bool("v", false, "prints version")
 	flag.Parse()
 
@@ -38,7 +38,7 @@ func main() {
 		Members: dataMembers,
 	}
 
-	err = dataReplSet.InitWithRetry(config.Retry, 1)
+	err = dataReplSet.InitWithRetry(config.Retry, config.Wait)
 	if err != nil {
 		logrus.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func main() {
 		Members: cfgMembers,
 	}
 
-	err = cfgReplSet.InitWithRetry(config.Retry, 1)
+	err = cfgReplSet.InitWithRetry(config.Retry, config.Wait)
 	if err != nil {
 		logrus.Fatal(err)
 	}

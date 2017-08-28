@@ -35,7 +35,7 @@ func pingWithRetry(member string, retry int, wait int) error {
 		err = ping(member)
 		if err != nil {
 			retry--
-			logrus.Warnf("%v Retry %v after %v seconds", err.Error(), retry, wait)
+			logrus.Warnf("%v is offline retrying in %v seconds", member, wait)
 			time.Sleep(time.Duration(wait) * time.Second)
 		} else {
 			return nil
@@ -131,7 +131,7 @@ func (r *ReplicaSet) WaitForPrimary(retry int, wait int) (bool, error) {
 			return true, nil
 		}
 		retry--
-		logrus.Warnf("No primary node found retying after %v seconds", wait)
+		logrus.Warnf("No primary node found retying in %v seconds", wait)
 		time.Sleep(time.Duration(wait) * time.Second)
 	}
 
