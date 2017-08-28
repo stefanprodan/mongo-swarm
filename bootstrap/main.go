@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"time"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -17,6 +19,7 @@ func main() {
 	flag.StringVar(&config.DataSet, "dataSet", "", "MongoDB data cluster")
 	flag.StringVar(&config.ConfigSet, "configSet", "", "MongoDB config cluster")
 	flag.IntVar(&config.Retry, "retry", 100, "retry count")
+	flag.IntVar(&config.Wait, "wait", 5, "wait time before checking the status in seconds")
 	appVersion := flag.Bool("v", false, "prints version")
 	flag.Parse()
 
@@ -42,6 +45,7 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	time.Sleep(time.Duration(config.Wait) * time.Second)
 	dataReplSet.PrintStatus()
 
 	cfgReplSetName, cfgMembers, err := ParseReplicaSet(config.ConfigSet)
@@ -61,6 +65,7 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	time.Sleep(time.Duration(config.Wait) * time.Second)
 	cfgReplSet.PrintStatus()
 
 	//wait for exit signal

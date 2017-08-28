@@ -10,6 +10,7 @@ type Config struct {
 	DataSet   string
 	ConfigSet string
 	Retry     int
+	Wait      int
 }
 
 // ReplicaSet format <replicaSetName>/data1:27017,data2:27017,data3:27017
