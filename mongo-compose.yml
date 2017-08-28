@@ -17,7 +17,7 @@ services:
       - net
     volumes:
       - data:/data/db
-    command: mongod --shardsvr --replSet datars --smallfiles
+    command: mongod --shardsvr --replSet datars --smallfiles --port 27017
     deploy:
       mode: replicated
       replicas: 1
@@ -31,7 +31,7 @@ services:
       - net
     volumes:
       - data:/data/db
-    command: mongod --shardsvr --replSet datars --smallfiles
+    command: mongod --shardsvr --replSet datars --smallfiles --port 27017
     deploy:
       mode: replicated
       replicas: 1
@@ -45,7 +45,7 @@ services:
       - net
     volumes:
       - data:/data/db
-    command: mongod --shardsvr --replSet datars --smallfiles
+    command: mongod --shardsvr --replSet datars --smallfiles --port 27017
     deploy:
       mode: replicated
       replicas: 1
