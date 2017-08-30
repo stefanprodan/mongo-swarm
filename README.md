@@ -13,7 +13,7 @@ routing configuration.
 
 ### Prerequisites 
 
-In oder to deploy the MongoDB Cluster you need to have a Docker Swarm cluster made out of eleven nodes:
+In oder to deploy the MongoDB stack you should have a Docker Swarm cluster made out of eleven nodes:
 
 * 3 Swarm manager nodes (prod-manager-1, prod-manager-2, prod-manager-3)
 * 3 Mongo data nodes (prod-mongodata-1, prod-mongodata-2, prod-mongodata-3)
@@ -137,3 +137,15 @@ recover a failed data or config nod, this node will rejoin the replica set and r
 If you want your cluster to outstand more than one node failure per replica set, you can 
 horizontally scale the data and config sets. Always have an odd number of nodes per replica set to avoid 
 split brain situations. 
+
+**Local deployment**
+
+If you want to run the MongoDB cluster on a single Docker machine without Docker Swarm mode you can use 
+the local compose file.
+
+```bash
+$ docker-compose -f local-compose.yml up -d
+``` 
+
+This will run all the MongoDB services and mongo-bootstrap on the bridge network without persistent storage. 
+I use the local compose for bootstrap debugging.  
