@@ -1,10 +1,11 @@
 # mongo-swarm
 
 [![Build Status](https://travis-ci.org/stefanprodan/mongo-swarm.svg?branch=master)](https://travis-ci.org/stefanprodan/mongo-swarm)
+[![Docker Image](https://images.microbadger.com/badges/image/stefanprodan/mongo-bootstrap.svg)](https://hub.docker.com/r/stefanprodan/mongo-bootstrap)
 
 Mongo-swarm is a POC project that automates the bootstrapping process of a MongoDB cluster for production use.
-With a single command you can deploy the Mongos, Config and Data replica sets onto Docker Swarm, forming a 
-high-available MongoDB cluster capable of surviving multiple nodes failure without service interruption. 
+With a single command you can deploy the _Mongos_, _Config_ and _Data_ replica sets onto Docker Swarm, 
+forming a high-available MongoDB cluster capable of surviving multiple nodes failure without service interruption. 
 The Docker stack is composed of two MongoDB replica sets, two Mongos instances and the
 mongo-bootstrap service. Mongo-bootstrap is written in Go and handles the replication, sharding and 
 routing configuration.
@@ -76,7 +77,7 @@ the MongoDB Cluster.
 
 **Persistent storage** 
 
-At first run of the stack, each data and config node will be provisioned with a named Docker volume. This 
+At first run, each data and config node will be provisioned with a named Docker volume. This 
 ensures the MongoDB databases will not be purged if you restart or update the MongoDB cluster. Even if you 
 remove the whole stack the volumes will remain on the disk. If you want to delete the MongoDB data and config 
 you have to run `docker volume purge` on each Swarm node.
@@ -122,7 +123,7 @@ msg="mongos2:27017 shard added"
 
 **High availability**
 
-A MongoDB cluster previsioned with mongo-swarm can survive node failures and will 
+A MongoDB cluster provisioned with mongo-swarm can survive node failures and will 
 start an automatic failover if:
 
 * the primary data node goes down
@@ -134,9 +135,9 @@ primary node and will reroute all the traffic to it. If a Mongos node goes down 
 configured to use both Mongos nodes, the Mongo driver will switch to the online Mongos instance. When you 
 recover a failed data or config nod, this node will rejoin the replica set and resync if the oplog size allows it.
 
-If you want your cluster to outstand more than one node failure per replica set, you can 
-horizontally scale the data and config sets. Always have an odd number of nodes per replica set to avoid 
-split brain situations. 
+If you want the cluster to outstand more than one node failure per replica set, you can 
+horizontally scale up the data and config sets by modifying the swarm-compose.yml file. 
+Always have an odd number of nodes per replica set to avoid split brain situations. 
 
 **Local deployment**
 
