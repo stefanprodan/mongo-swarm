@@ -9,7 +9,7 @@ The Docker stack is composed of two MongoDB replica sets, two Mongos instances a
 mongo-bootstrap service. Mongo-bootstrap is written in Go and handles the replication, sharding and 
 routing configuration.
 
-![Overview](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/rsz_1mongo-swarm.png)
+![Overview](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/mongo-swarm.png)
 
 ### Prerequisites 
 
