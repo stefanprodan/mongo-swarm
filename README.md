@@ -6,6 +6,8 @@ Setup MongoDB sharded clusters on Docker Swarm
 
 ### Swarm setup
 
+![Overview](https://raw.githubusercontent.com/stefanprodan/momgo-swarm/master/diagrams/mongo-swarm.png)
+
 Swarm nodes list:
 
 * 3 Swarm manager nodes (prod-manager-1, prod-manager-2, prod-manager-3)
