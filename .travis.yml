@@ -12,6 +12,8 @@ before_install:
 
 script:
   - cd bootstrap && make build
+
+after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    cd bootstrap && make push;
+    make push;
     fi
