@@ -142,7 +142,7 @@ Always have an odd number of nodes per replica set to avoid split brain situatio
 **Client connectivity**
 
 The Mongo clients should connect to all Mongos nodes that are running on the mongos overlay network. 
-Th test the Mongos connectivity you could run an interactive mongo container attached to the mongos network:
+To test the Mongos connectivity you can run an interactive mongo container attached to the mongos network:
 
 ```bash
 $ docker run --network mongos -it mongo:3.4 mongo mongos1:27017 
@@ -156,11 +156,11 @@ WriteResult({ "nInserted" : 1 })
 **Local deployment**
 
 If you want to run the MongoDB cluster on a single Docker machine without Docker Swarm mode you can use 
-the local compose file.
+the local compose file. I use it for debugging on Docker for Mac.
 
 ```bash
 $ docker-compose -f local-compose.yml up -d
 ``` 
 
-This will run all the MongoDB services and mongo-bootstrap on the bridge network without persistent storage. 
-I use the local compose for bootstrap debugging.  
+This will start all the MongoDB services and mongo-bootstrap on the bridge network without persistent storage. 
+  

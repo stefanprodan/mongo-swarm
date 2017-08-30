@@ -3,8 +3,5 @@ sudo: required
 services:
   - docker
 
-before_script:
-  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-
 script:
-  - cd bootstrap && make build pack push
+  - cd bootstrap && make build push

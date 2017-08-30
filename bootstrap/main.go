@@ -109,6 +109,8 @@ func main() {
 		logrus.Infof("%v shard added", mongos)
 	}
 
+	logrus.Info("Bootstrap finished")
+
 	//wait for exit signal
 	sigChan := make(chan os.Signal)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
