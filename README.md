@@ -139,6 +139,20 @@ If you want the cluster to outstand more than one node failure per replica set, 
 horizontally scale up the data and config sets by modifying the swarm-compose.yml file. 
 Always have an odd number of nodes per replica set to avoid split brain situations. 
 
+**Client connectivity**
+
+The Mongo clients should connect to all Mongos nodes that are running on the mongos overlay network. 
+Th test the Mongos connectivity you could run an interactive mongo container attached to the mongos network:
+
+```bash
+$ docker run --network mongos -it mongo:3.4 mongo mongos1:27017 
+
+mongos> use test
+switched to db test
+mongos> db.demo.insert({text: "demo"})
+WriteResult({ "nInserted" : 1 })
+```
+
 **Local deployment**
 
 If you want to run the MongoDB cluster on a single Docker machine without Docker Swarm mode you can use 
