@@ -114,3 +114,19 @@ msg="mongos1:27017 shard added"
 msg="mongos2:27017 is online"
 msg="mongos2:27017 shard added"
 ```
+
+**High availability**
+
+A MongoDB cluster previsioned with mongo-swarm can survive node failures and will 
+start an automatic failover if:
+
+* the primary data node goes down
+* the primary config node goes down
+* one of the mongos nodes goes down
+
+When the primary data or config nod goes down, the Mongos instances will detect the new 
+primary node and will reroute all the traffic to it. If a Mongos node goes down and your applications are 
+configured to use both Mongos nodes, the Mongo driver will switch to the online Mongos instance. When you 
+recover a failed data or config nod, this node will rejoin the replica set and resync if the oplog size allows it.
+
+
