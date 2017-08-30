@@ -1,9 +1,10 @@
 version: "3.3"
 
 networks:
-  net:
-    driver: overlay
-    attachable: true
+  mongo:
+    external: true
+  mongos:
+    external: true
 
 volumes:
     data: {}
@@ -14,7 +15,7 @@ services:
   data1:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
     volumes:
       - data:/data/db
     command: mongod --shardsvr --replSet datars --smallfiles --port 27017
@@ -28,7 +29,7 @@ services:
   data2:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
     volumes:
       - data:/data/db
     command: mongod --shardsvr --replSet datars --smallfiles --port 27017
@@ -42,7 +43,7 @@ services:
   data3:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
     volumes:
       - data:/data/db
     command: mongod --shardsvr --replSet datars --smallfiles --port 27017
@@ -56,7 +57,7 @@ services:
   cfg1:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
     volumes:
       - cfg:/data/configdb
     command: mongod --configsvr --replSet cfgrs --smallfiles --port 27017
@@ -70,7 +71,7 @@ services:
   cfg2:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
     volumes:
       - cfg:/data/configdb
     command: mongod --configsvr --replSet cfgrs --smallfiles --port 27017
@@ -84,7 +85,7 @@ services:
   cfg3:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
     volumes:
       - cfg:/data/configdb
     command: mongod --configsvr --replSet cfgrs --smallfiles --port 27017
@@ -98,7 +99,8 @@ services:
   mongos1:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
+      - mongos
     command: mongos --configdb cfgrs/cfg1:27017,cfg2:27017,cfg3:27017
     deploy:
       mode: replicated
@@ -110,7 +112,8 @@ services:
   mongos2:
     image: mongo:3.4
     networks:
-      - net
+      - mongo
+      - mongos
     command: mongos --configdb cfgrs/cfg1:27017,cfg2:27017,cfg3:27017
     deploy:
       mode: replicated
@@ -122,7 +125,7 @@ services:
   bootstrap:
     image: stefanprodan/mongo-bootstrap:latest
     networks:
-      - net
+      - mongo
     command:
       - '-dataSet=datars/data1:27017,data2:27017,data3:27017'
       - '-configSet=cfgrs/cfg1:27017,cfg2:27017,cfg3:27017'
