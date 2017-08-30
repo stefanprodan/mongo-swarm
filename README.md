@@ -6,7 +6,7 @@ Setup MongoDB sharded clusters on Docker Swarm
 
 ### Swarm setup
 
-![Overview](https://raw.githubusercontent.com/stefanprodan/mongo-swarm/master/diagrams/rsz_1mongo-swarm.png)
+![Overview](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/rsz_1mongo-swarm.png)
 
 Swarm nodes list:
 
