@@ -16,8 +16,8 @@ In oder to deploy the MongoDB Cluster you need to have a Docker Swarm cluster ma
 * 2 Mongo router nodes (prod-mongos-1, prod-mongos-2)
 
 You can name your Swarm nodes however you want, 
-the bootstrap process uses placement restrictions based on nodes labels. For the bootstraping to take place 
-you need to apply the following labels:
+the bootstrap process uses placement restrictions based on nodes labels. 
+For the bootstrapping to take place you need to apply the following labels:
 
 **Mongo data nodes**
 
@@ -62,9 +62,21 @@ docker network create --attachable -d overlay mongos
 docker stack deploy -c swarm-compose.yml mongo
 ```
 
-The config and data replica sets are isolated from the rest of the swarm in the mongo overlay network. The 
-routers, Mongos1 and Mongos2 are connected to the mongo network and to the mongos network. You should attach 
-application containers to the mongos network in order to communicate with the MongoDB Cluster.
+**Networking**
+
+The config and data replica sets are isolated from the rest of the swarm in the `mongo` overlay network. 
+The routers, Mongos1 and Mongos2 are connected to the `mongo` network and to the `mongos` network. 
+You should attach application containers to the `mongos` network in order to communicate with 
+the MongoDB Cluster.
+
+**Persistent storage** 
+
+At first run of the stack, each data and config node will be provisioned with a named Docker volume. This 
+ensures the MongoDB databases will not be purged if you restart or update the MongoDB cluster. Even if you 
+remove the whole stack the volumes will remain on the disk. If you want to delete the MongoDB data and config 
+you have to run `docker volume purge` on each Swarm node.
+
+**Bootstrapping**
 
 After the stack has been deploy the mongo-bootstrap container will do the following:
 
