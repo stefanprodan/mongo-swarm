@@ -2,7 +2,12 @@
 
 [![Build Status](https://travis-ci.org/stefanprodan/mongo-swarm.svg?branch=master)](https://travis-ci.org/stefanprodan/mongo-swarm)
 
-Setup MongoDB sharded clusters on Docker Swarm
+Mongo-swarm is a POC project that automates the bootstrapping process of a MongoDB cluster for production use.
+With a single command you can deploy the Mongos, Config and Data replica sets onto Docker Swarm, forming a 
+high-available MongoDB cluster capable of surviving multiple nodes failure without service interruption. 
+The Docker stack is composed of two MongoDB replica sets, two Mongos instances and the
+mongo-bootstrap service. Mongo-bootstrap is written in Go and handles the replication, sharding and 
+routing configuration.
 
 ![Overview](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/rsz_1mongo-swarm.png)
 
@@ -87,10 +92,10 @@ After the stack has been deploy the mongo-bootstrap container will do the follow
 * waits for the mongos nodes to be online
 * adds the data replica set shard to the mongos instances
 
-In order to monitor the bootstrap process you can watch the mongo-bootstrap service logs:
+You can monitor the bootstrap process by watching the mongo-bootstrap service logs:
 
 ```bash
-docker service logs mongo_bootstrap
+$ docker service logs -f mongo_bootstrap
 
 msg="Bootstrap started for data cluster datars members [data1:27017 data2:27017 data3:27017]"
 msg="datars member data1:27017 is online"
@@ -129,4 +134,6 @@ primary node and will reroute all the traffic to it. If a Mongos node goes down 
 configured to use both Mongos nodes, the Mongo driver will switch to the online Mongos instance. When you 
 recover a failed data or config nod, this node will rejoin the replica set and resync if the oplog size allows it.
 
-
+If you want your cluster to outstand more than one node failure per replica set, you can 
+horizontally scale the data and config sets. Always have an odd number of nodes per replica set to avoid 
+split brain situations. 
