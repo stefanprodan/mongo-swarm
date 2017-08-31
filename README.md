@@ -48,7 +48,7 @@ docker node update --label-add mongo.role=mongos1 prod-mongos-1
 docker node update --label-add mongo.role=mongos2 prod-mongos-2
 ```
 
-### Cluster bootstrap
+### Deploy
 
 Clone this repository and run bootstrap.sh on a Swarm manager node:
 
@@ -141,7 +141,6 @@ Always have an odd number of nodes per replica set to avoid split brain situatio
 
 **Client connectivity**
 
-The Mongo clients should connect to all Mongos nodes that are running on the mongos overlay network. 
 To test the Mongos connectivity you can run an interactive mongo container attached to the mongos network:
 
 ```bash
@@ -149,8 +148,19 @@ $ docker run --network mongos -it mongo:3.4 mongo mongos1:27017
 
 mongos> use test
 switched to db test
+
 mongos> db.demo.insert({text: "demo"})
 WriteResult({ "nInserted" : 1 })
+
+mongos> db.demo.find()
+{ "_id" : ObjectId("59a6fa01e33a5cec9872664f"), "text" : "demo" }
+```
+
+The Mongo clients should connect to all Mongos nodes that are running on the mongos overlay network. 
+Here is an example with the mgo golang MongoDB driver:
+
+```go
+session, err := mgo.Dial("mongodb://mongos1:27017,mongos2:27017/")
 ```
 
 **Local deployment**
