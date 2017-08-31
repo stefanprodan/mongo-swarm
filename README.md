@@ -22,7 +22,7 @@ In oder to deploy the MongoDB stack you should have a Docker Swarm cluster made 
 * 2 Mongo router nodes (prod-mongos-1, prod-mongos-2)
 
 You can name your Swarm nodes however you want, 
-the bootstrap process uses placement restrictions based on nodes labels. 
+the bootstrap process uses placement restrictions based on the `mongo.role` label. 
 For the bootstrapping to take place you need to apply the following labels:
 
 **Mongo data nodes**
@@ -50,7 +50,7 @@ docker node update --label-add mongo.role=mongos2 prod-mongos-2
 
 ### Deploy
 
-Clone this repository and run bootstrap.sh on a Swarm manager node:
+Clone this repository and run the bootstrap script on a Docker Swarm manager node:
 
 ```bash
 $ git clone https://github.com/stefanprodan/mongo-swarm
@@ -130,14 +130,26 @@ start an automatic failover if:
 * the primary config node goes down
 * one of the mongos nodes goes down
 
-When the primary data or config nod goes down, the Mongos instances will detect the new 
+When the primary data or config node goes down, the Mongos instances will detect the new 
 primary node and will reroute all the traffic to it. If a Mongos node goes down and your applications are 
 configured to use both Mongos nodes, the Mongo driver will switch to the online Mongos instance. When you 
-recover a failed data or config nod, this node will rejoin the replica set and resync if the oplog size allows it.
+recover a failed data or config node, this node will rejoin the replica set and resync if the oplog size allows it.
 
 If you want the cluster to outstand more than one node failure per replica set, you can 
 horizontally scale up the data and config sets by modifying the swarm-compose.yml file. 
 Always have an odd number of nodes per replica set to avoid split brain situations. 
+
+You can test the automatic failover by killing the primary data and config nodes:
+
+```bash
+root@prod-data1-1:~# docker kill mongo_data1.1....
+root@prod-cfg1-1:~# docker kill mongo_cfg1.1....
+```
+
+When you bring down the two instances Docker Swarm will start new containers to replace the killed ones. 
+The data and config replica sets will choose a new leader and the newly started instances will join the 
+cluster as followers. You can run `rs.status()` on a data or config node to 
+see who has taken the leader spot.
 
 **Client connectivity**
 
@@ -173,4 +185,3 @@ $ docker-compose -f local-compose.yml up -d
 ``` 
 
 This will start all the MongoDB services and mongo-bootstrap on the bridge network without persistent storage. 
-  
