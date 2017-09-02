@@ -1,6 +1,6 @@
 SHELL:=/bin/bash
 
-APP_VERSION?=0.3.0
+APP_VERSION?=0.4.0
 
 DIST:=$$(pwd)/dist
 BUILD_DATE:=$(shell date -u +%Y-%m-%d_%H.%M.%S)
