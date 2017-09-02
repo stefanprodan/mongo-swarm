@@ -135,18 +135,16 @@ func (r *ReplicaSet) PrintStatus() error {
 
 // replica set replSetGetStatus response object
 type ReplicaSetStatus struct {
-	Name    string                   `bson:"set"`
-	Members []ReplicaSetMemberStatus `bson:"members"`
+	Name    string                   `bson:"set" json:"set"`
+	Members []ReplicaSetMemberStatus `bson:"members" json:"members"`
 }
 
 // replica set member replSetGetStatus response object
 type ReplicaSetMemberStatus struct {
-	Id       int           `bson:"_id"`
-	Name     string        `bson:"name"`
-	Self     bool          `bson:"self"`
-	ErrMsg   string        `bson:"errmsg"`
-	Health   bool          `bson:"health"`
-	State    int           `bson:"state"`
-	StateStr string        `bson:"stateStr"`
-	Uptime   time.Duration `bson:"uptime"`
+	Id       int           `bson:"_id" json:"id"`
+	Name     string        `bson:"name" json:"name"`
+	ErrMsg   string        `bson:"errmsg" json:"errmsg"`
+	Healthy  bool          `bson:"health" json:"healthy"`
+	StateStr string        `bson:"stateStr" json:"state"`
+	Uptime   time.Duration `bson:"uptime" json:"uptime"`
 }
