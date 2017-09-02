@@ -149,7 +149,7 @@ root@prod-cfg1-1:~# docker kill mongo_cfg1.1....
 When you bring down the two instances Docker Swarm will start new containers to replace the killed ones. 
 The data and config replica sets will choose a new leader and the newly started instances will join the 
 cluster as followers. You can run `rs.status()` on a data or config node to 
-see who has taken the leader spot.
+see who has taken the leader spot or you can restart the bootstrap container and checks the logs.
 
 **Client connectivity**
 

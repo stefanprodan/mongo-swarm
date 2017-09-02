@@ -24,5 +24,6 @@ COPY --from=builder /go/dist/bootstrap /mongo-swarm/bootstrap
 
 RUN chmod 777 /mongo-swarm/bootstrap
 
+EXPOSE 9090
 WORKDIR /mongo-swarm
 ENTRYPOINT ["/mongo-swarm/bootstrap"]

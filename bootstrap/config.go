@@ -12,6 +12,7 @@ type Config struct {
 	Mongos    string
 	Retry     int
 	Wait      int
+	Port      int
 }
 
 // ReplicaSet format <replicaSetName>/data1:27017,data2:27017,data3:27017

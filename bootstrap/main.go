@@ -19,6 +19,7 @@ func main() {
 	flag.StringVar(&config.Mongos, "mongos", "", "Mongos list")
 	flag.IntVar(&config.Retry, "retry", 100, "retry count")
 	flag.IntVar(&config.Wait, "wait", 5, "wait time between retries in seconds")
+	flag.IntVar(&config.Port, "port", 9090, "HTTP server port")
 	appVersion := flag.Bool("v", false, "prints version")
 	flag.Parse()
 
@@ -110,6 +111,12 @@ func main() {
 	}
 
 	logrus.Info("Bootstrap finished")
+
+	logrus.Infof("Starting HTTP server on port %v", config.Port)
+	server := HttpServer{
+		Config: config,
+	}
+	go server.Start()
 
 	//wait for exit signal
 	sigChan := make(chan os.Signal)
