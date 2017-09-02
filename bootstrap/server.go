@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"encoding/json"
+	"strings"
+
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/mgo.v2"
@@ -46,8 +48,9 @@ func (s *HttpServer) Start() {
 }
 
 func GetReplicaSet(url string) (*ReplicaSetStatus, error) {
-
-	session, err := mgo.DialWithTimeout(url, 5*time.Second)
+	parts := strings.Split(url, "/")
+	mongoUrl := fmt.Sprintf("mongodb://%v/?replicaSet=%v", parts[1], parts[0])
+	session, err := mgo.DialWithTimeout(mongoUrl, 5*time.Second)
 	if err != nil {
 		return nil, errors.Wrapf(err, "%v connection failed", url)
 	}

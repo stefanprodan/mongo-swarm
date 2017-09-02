@@ -79,8 +79,10 @@ services:
       - net
 
   bootstrap:
-    image: stefanprodan/mongo-bootstrap:latest
+    image: stefanprodan/mongo-bootstrap:0.4.0
     container_name: mongo-bootstrap
+    ports:
+    - 9090:9090
     command:
       - '-dataSet=datars/data1:27017,data2:27017,data3:27017'
       - '-configSet=cfgrs/cfg1:27017,cfg2:27017,cfg3:27017'
