@@ -139,17 +139,83 @@ If you want the cluster to outstand more than one node failure per replica set, 
 horizontally scale up the data and config sets by modifying the swarm-compose.yml file. 
 Always have an odd number of nodes per replica set to avoid split brain situations. 
 
-You can test the automatic failover by killing the primary data and config nodes:
+You can test the automatic failover by killing or removing the primary data and config nodes:
 
 ```bash
 root@prod-data1-1:~# docker kill mongo_data1.1....
-root@prod-cfg1-1:~# docker kill mongo_cfg1.1....
+root@prod-cfg1-1:~# docker rm -f mongo_cfg1.1....
 ```
 
 When you bring down the two instances Docker Swarm will start new containers to replace the killed ones. 
 The data and config replica sets will choose a new leader and the newly started instances will join the 
-cluster as followers. You can run `rs.status()` on a data or config node to 
-see who has taken the leader spot or you can restart the bootstrap container and checks the logs.
+cluster as followers. 
+
+You can check the cluster state by doing an HTTP GET on mongo-bootstrap port 9090.
+
+```json
+docker run --rm --network mongo tutum/curl:alpine curl bootstrap:9090
+
+[
+  {
+    "set": "datars",
+    "members": [
+      {
+        "id": 0,
+        "name": "data1:27017",
+        "errmsg": "",
+        "healthy": true,
+        "state": "PRIMARY",
+        "uptime": 33
+      },
+      {
+        "id": 1,
+        "name": "data2:27017",
+        "errmsg": "",
+        "healthy": true,
+        "state": "SECONDARY",
+        "uptime": 39
+      },
+      {
+        "id": 2,
+        "name": "data3:27017",
+        "errmsg": "",
+        "healthy": true,
+        "state": "SECONDARY",
+        "uptime": 33
+      }
+    ]
+  },
+  {
+    "set": "cfgrs",
+    "members": [
+      {
+        "id": 0,
+        "name": "cfg1:27017",
+        "errmsg": "",
+        "healthy": true,
+        "state": "PRIMARY",
+        "uptime": 18
+      },
+      {
+        "id": 1,
+        "name": "cfg2:27017",
+        "errmsg": "",
+        "healthy": true,
+        "state": "SECONDARY",
+        "uptime": 40
+      },
+      {
+        "id": 2,
+        "name": "cfg3:27017",
+        "errmsg": "",
+        "healthy": true,
+        "state": "SECONDARY",
+        "uptime": 18
+      }
+    ]
+  }
+]
+```
 
 **Client connectivity**
 
