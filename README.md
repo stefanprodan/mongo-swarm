@@ -154,67 +154,6 @@ You can check the cluster state by doing an HTTP GET on mongo-bootstrap port 909
 
 ```json
 docker run --rm --network mongo tutum/curl:alpine curl bootstrap:9090
-
-[
-  {
-    "set": "datars",
-    "members": [
-      {
-        "id": 0,
-        "name": "data1:27017",
-        "errmsg": "",
-        "healthy": true,
-        "state": "PRIMARY",
-        "uptime": 33
-      },
-      {
-        "id": 1,
-        "name": "data2:27017",
-        "errmsg": "",
-        "healthy": true,
-        "state": "SECONDARY",
-        "uptime": 39
-      },
-      {
-        "id": 2,
-        "name": "data3:27017",
-        "errmsg": "",
-        "healthy": true,
-        "state": "SECONDARY",
-        "uptime": 33
-      }
-    ]
-  },
-  {
-    "set": "cfgrs",
-    "members": [
-      {
-        "id": 0,
-        "name": "cfg1:27017",
-        "errmsg": "",
-        "healthy": true,
-        "state": "PRIMARY",
-        "uptime": 18
-      },
-      {
-        "id": 1,
-        "name": "cfg2:27017",
-        "errmsg": "",
-        "healthy": true,
-        "state": "SECONDARY",
-        "uptime": 40
-      },
-      {
-        "id": 2,
-        "name": "cfg3:27017",
-        "errmsg": "",
-        "healthy": true,
-        "state": "SECONDARY",
-        "uptime": 18
-      }
-    ]
-  }
-]
 ```
 
 **Client connectivity**
@@ -298,8 +237,15 @@ You can run the load test using rakyll/hey or Apache bench.
 go get -u github.com/rakyll/hey
 
 #do 10K requests 
- hey -n 10000 -c 100 -m GET http://<SWARM-PUBLIC-IP>:9999/
- 
+hey -n 10000 -c 100 -m GET http://<SWARM-PUBLIC-IP>:9999/
+```
+
+While running the load test you could kill a _Mongos_, _Data_ and _Config_ node and see 
+what's the failover impact.
+
+Running the load test with a single loadtest instance:
+
+```bash
 Summary:
   Total:	58.3945 secs
   Slowest:	2.5077 secs
@@ -310,7 +256,6 @@ Summary:
   Size/request:	850 bytes
 
 Response time histogram:
-  0.059 [1]	|
   0.304 [1835]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
   0.549 [3781]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
   0.793 [2568]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
@@ -318,8 +263,33 @@ Response time histogram:
   1.283 [400]	|∎∎∎∎
 ```
 
-While running the load test you could kill a _Mongos_, _Data_ and _Config_ node and see 
-what's the failover impact.
+Running the load test with 3 loadtest instance:
+
+```bash
+Summary:
+  Total:	35.5129 secs
+  Slowest:	1.9471 secs
+  Fastest:	0.0494 secs
+  Average:	0.3223 secs
+  Requests/sec:	281.5877
+  Total data:	8508392 bytes
+  Size/request:	850 bytes
+
+Response time histogram:
+  0.239 [5040]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  0.429 [2358]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  0.619 [1235]	|∎∎∎∎∎∎∎∎∎∎
+  0.808 [741]	|∎∎∎∎∎∎
+  0.998 [396]	|∎∎∎
+```
+
+Scaling up the application from one instance to three instances made the load test 23 seconds faster and the 
+requests per second rate went from 171 to 281.
+
+Monitoring the load test with Weave Cloud shows how the traffic is being routed by the Docker Swarm 
+load balancer and by the Mongos instances:
+
+![Traffic](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/weave-cloud.png)
 
 **Local deployment**
 

@@ -17,4 +17,4 @@ services:
       - 9999:9999
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 3
