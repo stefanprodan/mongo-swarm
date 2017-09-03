@@ -12,7 +12,7 @@ var version = "undefined"
 
 func main() {
 	var config = &Config{}
-	flag.IntVar(&config.Port, "port", 9090, "HTTP server port")
+	flag.IntVar(&config.Port, "port", 9999, "HTTP server port")
 	flag.StringVar(&config.MongoUri, "uri", "mongodb://mongos1:27017,mongos2:27017", "Mongos URI")
 	appVersion := flag.Bool("v", false, "prints version")
 	flag.Parse()
@@ -32,5 +32,6 @@ func main() {
 		Repository: repo,
 	}
 
+	logrus.Infof("Starting HTTP server on port %v", config.Port)
 	server.Start()
 }
