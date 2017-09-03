@@ -1,0 +1,20 @@
+version: "3.3"
+
+networks:
+  mongos:
+    external: true
+
+services:
+
+  loadtest:
+    image: stefanprodan/mongo-loadtest:latest
+    networks:
+      - mongos
+    command:
+      - '-uri=mongodb://mongos1:27017,mongos2:27017'
+      - '-port=9999'
+    ports:
+      - 9999:9999
+    deploy:
+      mode: replicated
+      replicas: 1
