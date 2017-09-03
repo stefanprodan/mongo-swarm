@@ -263,7 +263,7 @@ Response time histogram:
   1.283 [400]	|∎∎∎∎
 ```
 
-Running the load test with 3 loadtest instance:
+Running the load test with 3 loadtest instances:
 
 ```bash
 Summary:
