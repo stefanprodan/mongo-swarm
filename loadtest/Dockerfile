@@ -20,7 +20,7 @@ RUN go build -ldflags "-X main.version=$APP_VERSION" \
 
 FROM alpine:latest
 
-COPY --from=builder /go/dist/bootstrap /mongo-swarm/loadtest
+COPY --from=builder /go/dist/loadtest /mongo-swarm/loadtest
 
 RUN chmod 777 /mongo-swarm/loadtest
 
