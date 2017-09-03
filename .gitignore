@@ -17,4 +17,5 @@
 .DS_Store
 
 bootstrap/vendor/
+loadtest/vendor/
 debug-compose.yml
