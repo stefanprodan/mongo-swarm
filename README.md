@@ -241,6 +241,86 @@ Here is an example with the mgo golang MongoDB driver:
 session, err := mgo.Dial("mongodb://mongos1:27017,mongos2:27017/")
 ```
 
+**Load testing**
+
+You can run load tests for the MongoDB cluster using the loadtest app. 
+
+Start 3 loadtest instances on the mongos network:
+
+```bash
+docker stack deploy -c swarm-loadtest.yml lt
+``` 
+
+The loadtest app is a Go web service that connects to the two Mongos nodes and does an insert and select:
+
+```go
+http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+    session := s.Repository.Session.Copy()
+    defer session.Close()
+
+    log := &AccessLog{
+        Timestamp: time.Now().UTC(),
+        UserAgent: string(req.Header.Get("User-Agent")),
+    }
+
+    c := session.DB("test").C("log")
+
+    err := c.Insert(log)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    logs := []AccessLog{}
+
+    err = c.Find(nil).Sort("-timestamp").Limit(10).All(&logs)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    b, err := json.MarshalIndent(logs, "", "  ")
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    w.Write(b)
+})
+```
+
+The loadtest service is exposed on the internet on port 9999. 
+You can run the load test using rakyll/hey or Apache bench.
+
+```bash
+#install hey
+go get -u github.com/rakyll/hey
+
+#do 10K requests 
+ hey -n 10000 -c 100 -m GET http://<SWARM-PUBLIC-IP>:9999/
+ 
+Summary:
+  Total:	58.3945 secs
+  Slowest:	2.5077 secs
+  Fastest:	0.0588 secs
+  Average:	0.5608 secs
+  Requests/sec:	171.2490
+  Total data:	8508290 bytes
+  Size/request:	850 bytes
+
+Response time histogram:
+  0.059 [1]	|
+  0.304 [1835]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  0.549 [3781]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  0.793 [2568]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  1.038 [1153]	|∎∎∎∎∎∎∎∎∎∎∎∎
+  1.283 [400]	|∎∎∎∎
+```
+
+While running the load test you could kill a _Mongos_, _Data_ and _Config_ node and see 
+what's the failover impact.
+
 **Local deployment**
 
 If you want to run the MongoDB cluster on a single Docker machine without Docker Swarm mode you can use 
