@@ -16,7 +16,7 @@ RUN dep ensure
 # output
 RUN mkdir /go/dist
 RUN go build -ldflags "-X main.version=$APP_VERSION" \
-    -o /go/dist/bootstrap github.com/stefanprodan/mongo-swarm/loadtest
+    -o /go/dist/loadtest github.com/stefanprodan/mongo-swarm/loadtest
 
 FROM alpine:latest
 
