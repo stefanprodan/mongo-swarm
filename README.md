@@ -286,10 +286,20 @@ Response time histogram:
 Scaling up the application from one instance to three instances made the load test 23 seconds faster and the 
 requests per second rate went from 171 to 281.
 
+**Monitoring with Weave Scope**
+
 Monitoring the load test with Weave Cloud shows how the traffic is being routed by the Docker Swarm 
 load balancer and by the Mongos instances:
 
 ![Traffic](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/weave-cloud.png)
+
+Weave Scope is a great tool for visualising network traffic between containers and/or Docker Swarm nodes. 
+Besides traffic you can also monitor system load, CPU and memory usage. Recording multiple
+load test sessions with Scope you can determine what's the maximum load your infrastructure can take without
+a performance degradation. 
+
+Monitoring a Docker Swarm cluster with Weave Cloud is as simple as deploying a Scope container on each Swarm node. 
+More info on installing Weave Scope with Docker can be found [here](https://www.weave.works/docs/scope/latest/installing/).
 
 **Local deployment**
 
