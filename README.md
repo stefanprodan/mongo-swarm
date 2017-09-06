@@ -291,7 +291,7 @@ requests per second rate went from 171 to 281.
 Monitoring the load test with Weave Cloud shows how the traffic is being routed by the Docker Swarm 
 load balancer and by the Mongos instances:
 
-![Traffic](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/weave-cloud.png)
+![Traffic](https://github.com/stefanprodan/mongo-swarm/blob/master/diagrams/weave-scope.png)
 
 Weave Scope is a great tool for visualising network traffic between containers and/or Docker Swarm nodes. 
 Besides traffic you can also monitor system load, CPU and memory usage. Recording multiple
@@ -300,6 +300,8 @@ a performance degradation.
 
 Monitoring a Docker Swarm cluster with Weave Cloud is as simple as deploying a Scope container on each Swarm node. 
 More info on installing Weave Scope with Docker can be found [here](https://www.weave.works/docs/scope/latest/installing/).
+
+
 
 **Local deployment**
 
